@@ -1,0 +1,39 @@
+#!/bin/python
+
+import os
+from selenium import webdriver
+from selenium.webdriver.common.by import By
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
+
+
+browser = webdriver.Chrome()
+browser.get("https://192.168.1.1/")
+
+skip = browser.find_element(By.ID, "details-button")
+skip.click()
+skip = browser.find_element(By.ID, "proceed-link")
+skip.click()
+
+username = browser.find_element(By.ID, "txt_Username")
+username.send_keys(os.getenv("ROUTER_USERNAME"))
+
+password = browser.find_element(By.ID, "txt_Password")
+
+password.send_keys(os.getenv("ROUTER_PASSWORD"))
+
+login = browser.find_element(By.ID, "btnLogin")
+login.click()
+
+WebDriverWait(browser,10).until(EC.frame_to_be_available_and_switch_to_it((By.ID, "listfrm")))
+WebDriverWait(browser,10).until(EC.element_to_be_clickable((By.ID, "link_Admin_3"))).click()
+WebDriverWait(browser,10).until(EC.element_to_be_clickable((By.ID, "link_Admin_3_1"))).click()
+
+browser.switch_to.default_content()
+
+WebDriverWait(browser,10).until(EC.frame_to_be_available_and_switch_to_it((By.ID, "contentfrm")))
+WebDriverWait(browser,10).until(EC.element_to_be_clickable((By.NAME, "btnReboot"))).click()
+
+browser.switch_to.alert.accept()
+
+browser.quit()
